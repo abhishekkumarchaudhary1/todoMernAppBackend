@@ -1,10 +1,10 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { Todo } from "../models/todo.models.js";
 
-import jwt from "jsonwebtoken";
+// import jwt from "jsonwebtoken";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { ApiError } from "../utils/ApiError.js";
-import { uploadOnCloudinary } from "../utils/cloudinary.js";
+// import { uploadOnCloudinary } from "../utils/cloudinary.js";
 
 const todoTestAPI = asyncHandler(async(req, res)=> {
     const { todoData } = req.body;
@@ -104,28 +104,50 @@ const updateTodo = asyncHandler( async(req, res)=>{
     
 })
 
-const fetchAllTodos = asyncHandler(async(req, res) => {
-    //get userId from req.user._id through jwt
-    //use find keyword to find respective todos in the databases
+// const fetchAllTodos = asyncHandler(async(req, res) => {
+//     //get userId from req.user._id through jwt
+//     //use find keyword to find respective todos in the databases
 
-    const allTodos = await Todo.find({ ownerId: req.user?._id, status: true });
+//     const allTodos = await Todo.find({ ownerId: req.user?._id, status: true });
+//     console.log(allTodos);
+
+//     if (allTodos.length === 0) {
+//         return res
+//         .status(404)
+//         .json(new ApiResponse(404, {}, "No todos found for this user"))
+//     }
+
+//     return res
+//     .status(200)
+//     .json(new ApiResponse(200, allTodos, "Todos fetched successfully"))
+
+
+
+
+
+// })
+
+const fetchAllTodos = asyncHandler(async (req, res) => {
+    // Get userId from req.user._id through jwt
+    const userId = req.user?._id;
+
+    // Find all todos for the user with the status set to true
+    const allTodos = await Todo.find({ ownerId: userId, status: true });
     console.log(allTodos);
 
+    // Check if no todos are found and return a response with an empty array
     if (allTodos.length === 0) {
         return res
-        .status(404)
-        .json(new ApiResponse(404, {}, "No todos found for this user"))
+            .status(200)
+            .json(new ApiResponse(200, [], "No todos found for this user"));
     }
 
+    // Return todos if found
     return res
-    .status(200)
-    .json(new ApiResponse(200, allTodos, "Todos fetched successfully"))
+        .status(200)
+        .json(new ApiResponse(200, allTodos, "Todos fetched successfully"));
+});
 
-
-
-
-
-})
 
 const trashTodo = asyncHandler( async(req, res)=> {
     //take todoId from params and validate
