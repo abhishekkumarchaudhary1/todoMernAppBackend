@@ -1,7 +1,7 @@
 import { Router } from "express";
 
 import { verifyJWT } from "../middlewares/auth.middleware.js";
-import { createTodo, deleteTodo, fetchAllTodos, retrieveTodo, shareTodo, todoTestAPI, trashTodo, updateTodo } from "../controllers/todo.controller.js";
+import { createTodo, deleteTodo, fetchActiveTodos, fetchTrashedTodos, retrieveTodo, shareTodo, todoTestAPI, trashTodo, updateTodo } from "../controllers/todo.controller.js";
 
 const router = Router();
 
@@ -11,9 +11,11 @@ router.route("/create-todo").post(verifyJWT, createTodo)
 
 router.route("/update-todo/:todoId").post(verifyJWT, updateTodo)
 
-router.route("/fetch-all-todos").get(verifyJWT, fetchAllTodos)
+router.route("/fetch-active-todos").get(verifyJWT, fetchActiveTodos)
 
 router.route("/trash-todo/:todoId").post(verifyJWT, trashTodo)
+
+router.route("/fetch-trashed-todos").get(verifyJWT, fetchTrashedTodos)
 
 router.route("/delete-todo/:todoId").delete(verifyJWT, deleteTodo)
 

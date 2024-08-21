@@ -127,7 +127,7 @@ const updateTodo = asyncHandler( async(req, res)=>{
 
 // })
 
-const fetchAllTodos = asyncHandler(async (req, res) => {
+const fetchActiveTodos = asyncHandler(async (req, res) => {
     // Get userId from req.user._id through jwt
     const userId = req.user?._id;
 
@@ -179,7 +179,28 @@ const trashTodo = asyncHandler( async(req, res)=> {
 
 
 
-})
+});
+
+const fetchTrashedTodos = asyncHandler(async (req, res) => {
+    // Get userId from req.user._id through jwt
+    const userId = req.user?._id;
+
+    // Find all todos for the user with the status set to true
+    const trashedTodos = await Todo.find({ ownerId: userId, status: false });
+    console.log(trashedTodos);
+
+    // Check if no todos are found and return a response with an empty array
+    if (trashedTodos.length === 0) {
+        return res
+            .status(200)
+            .json(new ApiResponse(200, [], "No trashed todos found for this user"));
+    }
+
+    // Return todos if found
+    return res
+        .status(200)
+        .json(new ApiResponse(200, trashedTodos, "Trashed todos fetched successfully"));
+});
 
 const deleteTodo = asyncHandler(async(req, res)=> {
 
@@ -281,8 +302,9 @@ export{
     todoTestAPI,
     createTodo,
     updateTodo,
-    fetchAllTodos,
+    fetchActiveTodos,
     trashTodo,
+    fetchTrashedTodos,
     deleteTodo,
     retrieveTodo,
     shareTodo
