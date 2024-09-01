@@ -274,7 +274,7 @@ const shareTodo = asyncHandler(async(req, res) => {
     let { receiverUserId } = req.body;
     receiverUserId = String(receiverUserId);
 
-    const receiver = await Todo.find({ownerId: receiverUserId});
+    const receiver = await User.find({_id: receiverUserId});
 
     if (!receiver) {
         throw new ApiError(400, "No receiver found with the given id");
